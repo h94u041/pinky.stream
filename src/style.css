@@ -1,0 +1,15 @@
+:root {
+  font-family: system-ui, 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  background: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 0;
+}
