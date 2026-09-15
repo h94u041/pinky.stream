@@ -1,65 +1,110 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
+import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import KeygenIntro from './components/KeygenIntro.vue'
+import ToastStack from './components/ToastStack.vue'
+import { setLocale, type Locale } from './i18n'
+import { mapData } from './map/mapdata'
+import { seedTaichung } from './world/seed'
+import { bootWorld, world } from './world/store'
 
-const count = ref(0)
-const name = ref('')
+const { t, locale } = useI18n()
+const route = useRoute()
+const router = useRouter()
+const ready = ref(false)
+const showIntro = ref(false)
+
+onMounted(async () => {
+  const fresh = await bootWorld(seedTaichung)
+  showIntro.value = fresh
+  ready.value = true
+})
+
+function switchLang() {
+  setLocale((locale.value === 'zh-TW' ? 'en' : 'zh-TW') as Locale)
+}
 </script>
 
 <template>
-  <el-container class="page">
-    <el-header class="header">
-      <h1>Pinky</h1>
-      <el-tag type="success" round>Vue 3 + Element Plus</el-tag>
-    </el-header>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot" />
+        <h1>{{ t('app.name') }}</h1>
+        <span v-if="mapData.source === 'placeholder'" class="chip amber">{{ t('app.placeholderMap') }}</span>
+      </div>
+      <nav class="tabs">
+        <button :class="{ active: route.path === '/' }" @click="router.push('/')">{{ t('app.participant') }}</button>
+        <button :class="{ active: route.path === '/console' }" @click="router.push('/console')">{{ t('app.console') }}</button>
+        <button class="lang mono" @click="switchLang">{{ t('app.lang') }}</button>
+      </nav>
+    </header>
 
-    <el-main>
-      <el-card shadow="hover" class="card">
-        <template #header>快速試用</template>
+    <main class="stage">
+      <router-view v-if="ready" />
+    </main>
 
-        <el-form label-position="top">
-          <el-form-item label="你的名字">
-            <el-input v-model="name" placeholder="輸入名字" clearable>
-              <template #prefix><el-icon><User /></el-icon></template>
-            </el-input>
-          </el-form-item>
-        </el-form>
-
-        <el-space>
-          <el-button type="primary" :icon="Plus" @click="count++">
-            點了 {{ count }} 次
-          </el-button>
-          <el-button @click="count = 0">重設</el-button>
-        </el-space>
-
-        <el-alert
-          v-if="name"
-          class="greet"
-          :title="`哈囉，${name}！`"
-          type="info"
-          :closable="false"
-          show-icon
-        />
-      </el-card>
-    </el-main>
-  </el-container>
+    <KeygenIntro v-if="ready && showIntro" :codename="world.player.codename" @done="showIntro = false" />
+    <ToastStack />
+  </div>
 </template>
 
 <style scoped>
-.page {
-  min-height: 100vh;
+.shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-.header {
+.topbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  border-bottom: 1px solid var(--el-border-color);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ink);
+  flex-wrap: wrap;
 }
-.card {
-  max-width: 480px;
-  margin: 0 auto;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.greet {
-  margin-top: 16px;
+.brand h1 {
+  font-size: 18px;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--pinky);
+  box-shadow: 0 0 12px var(--pinky);
+}
+.tabs {
+  display: flex;
+  gap: 6px;
+}
+.tabs button {
+  background: transparent;
+  color: var(--haze);
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+}
+.tabs button.active {
+  color: var(--paper);
+  border-color: var(--line);
+  background: var(--panel);
+}
+.tabs .lang {
+  font-size: 12px;
+}
+.stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
 }
 </style>
