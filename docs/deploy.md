@@ -16,7 +16,9 @@
 
 ---
 
-## 階段 1 · 程式碼推上 GitHub（約 5 分鐘）
+> **2026-09-18 更新：已上線。** 網域 ，用 wrangler 直接上傳（不經 GitHub）。之後每次更新只要 。階段 1–2 的 GitHub / Pages 連結流程改為選配（想要 push 自動部署再做）。設定檔在 。
+
+## 階段 1 · 程式碼推上 GitHub（選配）
 
 ```powershell
 cd C:\Users\h94u0\Documents\Pinky

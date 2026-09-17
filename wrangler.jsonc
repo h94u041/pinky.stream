@@ -1,0 +1,18 @@
+{
+  // Cloudflare Workers 靜態資產部署（Pages 已併入 Workers）。
+  // 部署：npm run build && npx wrangler deploy
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pinky",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    // /about → /about/index.html；找不到就回 404 頁（不是 SPA fallback，避免公開頁被 App 蓋掉）
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "pinky.stream", "custom_domain": true },
+    { "pattern": "www.pinky.stream", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+}

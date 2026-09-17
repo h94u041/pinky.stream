@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "map:placeholder": "node scripts/make-placeholder-map.mjs",
-    "map:build": "node scripts/build-map-data.mjs"
+    "map:build": "node scripts/build-map-data.mjs",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
@@ -27,6 +28,7 @@
     "unplugin-vue-components": "^32.1.0",
     "vite": "^8.3.0",
     "vitest": "^5.0.1",
-    "vue-tsc": "^3.3.11"
+    "vue-tsc": "^3.3.11",
+    "wrangler": "^4.134.0"
   }
 }
