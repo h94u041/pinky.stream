@@ -44,4 +44,4 @@ Allow: /
 User-agent: meta-externalagent
 Allow: /
 
-Sitemap: https://pinky.example/sitemap.xml
+Sitemap: https://pinky.stream/sitemap.xml

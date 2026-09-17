@@ -231,7 +231,7 @@ Workers 免費 10 萬請求／天、D1 免費 5 GB + 每日 500 萬讀取。超�
 | `/sitemap.xml` | 靜態版（上後端後改動態） | — |
 | `/llms.txt`、`/llms-full.txt` | 給 LLM 的站點摘要與全文 | — |
 
-**綁好網域後要做一件事**：把所有檔案裡的 `https://pinky.example` 換成正式網址（一行指令）：
+**綁好網域後要做一件事**：把所有檔案裡的 `https://pinky.stream` 換成正式網址（一行指令）：
 
 ```powershell
 Get-ChildItem index.html, public -Recurse -File -Include *.html,*.txt,*.xml | ForEach-Object { (Get-Content $_ -Raw) -replace 'https://pinky\.example', 'https://你的網域' | Set-Content $_ -Encoding utf8 -NoNewline }

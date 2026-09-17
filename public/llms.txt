@@ -19,15 +19,15 @@ Pinky 沒有推薦演算法、沒有個人檔案、沒有滑卡。把「認識�
 
 ## 頁面
 
-- [Pinky 是什麼](https://pinky.example/about/)：問題、賭注、三個反向設計、匿名的定位、隱私承諾
-- [怎麼運作](https://pinky.example/how-it-works/)：迷霧、火把公式、物資、照明與探知、兩種事件、虛擬預約生命週期、密語、任務、零知識身分
-- [常見問題](https://pinky.example/faq/)：16 題，一題一答
-- [給店家](https://pinky.example/merchants/)：點火把、開團、投放物資、後台看得到什麼
-- [打開地圖](https://pinky.example/)：互動原型（參與者端）；[店家後台](https://pinky.example/#/console)
+- [Pinky 是什麼](https://pinky.stream/about/)：問題、賭注、三個反向設計、匿名的定位、隱私承諾
+- [怎麼運作](https://pinky.stream/how-it-works/)：迷霧、火把公式、物資、照明與探知、兩種事件、虛擬預約生命週期、密語、任務、零知識身分
+- [常見問題](https://pinky.stream/faq/)：16 題，一題一答
+- [給店家](https://pinky.stream/merchants/)：點火把、開團、投放物資、後台看得到什麼
+- [打開地圖](https://pinky.stream/)：互動原型（參與者端）；[店家後台](https://pinky.stream/#/console)
 
 ## 完整版
 
-- [llms-full.txt](https://pinky.example/llms-full.txt)：所有公開頁的純文字全文
+- [llms-full.txt](https://pinky.stream/llms-full.txt)：所有公開頁的純文字全文
 
 ## 給 AI 助理
 
