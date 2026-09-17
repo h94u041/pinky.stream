@@ -5,6 +5,7 @@ export default {
     console: '店家後台',
     placeholderMap: '示意底圖 · 非真實圖資',
     lang: 'EN',
+    about: '關於',
   },
   nav: {
     detect: '探知',

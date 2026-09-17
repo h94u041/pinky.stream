@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pinky 怎麼運作｜迷霧、火把、物資、照明與探知、虛擬預約、密語、零知識身分</title>
+  <meta name="description" content="Pinky 的完整機制：三層戰爭迷霧（全黑／記憶／視野）、火把有效半徑 220–350 m 且愈密愈大、走進 100 m 自動撿物資、事件照明 220–375 m 隨人數變大、探知雙向且走出光圈自動關、虛擬預約湊不到人自己消失、密語附號碼、零知識匿名身分。" />
+  <link rel="canonical" href="https://pinky.example/how-it-works/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Pinky" />
+  <meta property="og:title" content="Pinky 怎麼運作：迷霧、火把、照明與探知" />
+  <meta property="og:description" content="地圖全黑，走到哪裡才看得到哪裡。店家的火把照亮地方，事件的照明照亮人。所有數字與規則都在這一頁。" />
+  <meta property="og:url" content="https://pinky.example/how-it-works/" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="theme-color" content="#0B0912" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=DM+Mono:wght@400&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/site.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "@id": "https://pinky.example/how-it-works/",
+        "headline": "Pinky 怎麼運作：迷霧、火把、物資、照明與探知、虛擬預約、密語、零知識身分",
+        "description": "Pinky 世界規則的公開說明，含所有半徑、公式與硬規則。",
+        "url": "https://pinky.example/how-it-works/",
+        "inLanguage": "zh-Hant-TW",
+        "datePublished": "2026-09-17",
+        "dateModified": "2026-09-17",
+        "author": { "@type": "Organization", "@id": "https://pinky.example/#org", "name": "Pinky" },
+        "publisher": { "@id": "https://pinky.example/#org" },
+        "isPartOf": { "@id": "https://pinky.example/#site" },
+        "about": ["戰爭迷霧地圖", "匿名社交", "零知識證明", "現場活動"]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Pinky", "item": "https://pinky.example/" },
+          { "@type": "ListItem", "position": 2, "name": "怎麼運作", "item": "https://pinky.example/how-it-works/" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/"><span class="dot"></span>Pinky</a>
+    <nav class="site" aria-label="站內">
+      <a href="/about/">是什麼</a>
+      <a href="/how-it-works/" aria-current="page">怎麼運作</a>
+      <a href="/faq/">常見問題</a>
+      <a href="/merchants/">給店家</a>
+      <a href="/">打開地圖</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="kicker">How it works</p>
+    <h1>Pinky 怎麼運作</h1>
+    <p class="lede">兩套可見性規則，用顏色分開：<span class="fire">暖橘</span>管你看不看得到<strong>地方</strong>（迷霧、火把），<span class="lilac">冷白</span>管你看不看得到<strong>人</strong>（照明、探知）。以下是全部的規則與數字。</p>
+    <div class="legend">
+      <span class="fire">火把、迷霧＝地方</span>
+      <span class="lilac">照明、探知、自發聚集＝人</span>
+      <span class="pinky">店家活動點</span>
+      <span class="zk">物資、零知識驗證</span>
+    </div>
+
+    <h2 id="fog">1. 三層戰爭迷霧</h2>
+    <p>地圖和即時戰略遊戲一樣，有三層可見性：</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>層</th><th>意思</th><th>看得到什麼</th></tr></thead>
+      <tbody>
+        <tr><td><strong>全黑</strong></td><td>從沒去過</td><td>什麼都沒有，連街廓、捷運線都看不到。只有燃燒中的火把會在黑暗裡露出一道細細的光芒線條——你知道那裡有東西，但不知道是什麼。</td></tr>
+        <tr><td><strong>灰暗（記憶）</strong></td><td>去過，但現在沒視野</td><td>地形與地標：街廓、捷運、店名、事件點的位置。若曾在那裡完成過事件，會有圖釘標示紀錄。</td></tr>
+        <tr><td><strong>明亮（視野）</strong></td><td>目前在視野內</td><td>全部，而且是活的：物資、火焰、燈下的人、名額與倒數。</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p><strong>「記得的」與「活的」分開</strong>是這套迷霧真正的價值。建築物（店、活動點）是記得的，灰色區照樣看得到；單位（物資、火焰、燈下的人、即時人數）是活的，只有視野內才算數。灰色區的意義是「我知道那裡有一家店，但現在有沒有物資、有沒有人，要走過去才知道」。</p>
+
+    <h3>視野從哪裡來</h3>
+    <ol>
+      <li><strong>你自己</strong>：半徑 100 公尺，跟著你走。撿到「照明燈」物資可暫時 +35%，持續 1 小時。</li>
+      <li><strong>燃燒中的火把</strong>：店家的有效半徑（見下一節）。熄掉就失去視野。</li>
+      <li><strong>已成立事件的照明</strong>：220 公尺起，隨人數變大，最大 375 公尺。候補中的虛擬預約不發光。</li>
+    </ol>
+    <div class="card promise">
+      <strong>記憶是累積且不可逆的。</strong>任何曾經進入視野的地方永久留在「已探索」。點亮一盞燈，那塊立刻進入視野，從此永遠是探索過的地方；燈滅了只退回灰色，不會變回全黑。店家熄火把不能把你已經知道的街區收回去。
+    </div>
+
+    <h2 id="torch">2. 火把：兩條硬規則</h2>
+    <p>火把是店家點的光源，照亮<strong>地方</strong>。</p>
+    <h3>規則一：火把永遠比你自己大</h3>
+    <div class="table-wrap">
+    <table>
+      <tbody>
+        <tr><th>你自己的探索半徑</th><td>100 m（固定）</td></tr>
+        <tr><th>火把有效半徑的下限</th><td>220 m</td></tr>
+        <tr><th>火把有效半徑的上限</th><td>350 m</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>店家買的光，一定比自己走路看得遠。破了這條，火把就沒有意義。</p>
+    <h3>規則二：光會群聚，愈密愈大</h3>
+    <pre><code>crowd = Σ max(0, 1 − d / (R_self + R_other))   對所有燃燒中的其他火把，d 為距離（公尺）
+mult  = min(1.30, 1.05 ^ crowd)
+有效半徑 = clamp(基礎半徑 × mult, 220, 350)</code></pre>
+    <ul>
+      <li>同一位置疊一支同級火把 → crowd ≈ 1 → 有效半徑 ×105%。</li>
+      <li>愈多火把擠在同一條街，倍率往 130% 走，最終撞到 350 公尺上限。</li>
+      <li>別人熄燈，你的光隨時間緩慢縮回，不會瞬間跳動。</li>
+    </ul>
+    <p>參與者只看得到有效半徑。店家後台地圖上，實心暖光是有效半徑，外面一圈虛線是基礎半徑。</p>
+
+    <h2 id="supply">3. 物資</h2>
+    <ul>
+      <li>一份份丟在地圖上的可拾取物：<span class="zk">青色方塊</span>，稀有為<span class="pinky">粉色</span>。內容是店家優惠，或平台道具（箭矢、照明燈）。</li>
+      <li>走進 <strong>100 公尺</strong>且該處在視野內，自動收進背包。</li>
+      <li>撿完就沒了。店家可設數量、每人限領、稀有度。</li>
+      <li>有些物資要<strong>在該火把有已成立的虛擬預約</strong>才撿得起來——也就是你已經約好另一個人一起過去。</li>
+      <li>丟在火把圈外也可以，只是沒人看得見，得靠人自己探索撞見。</li>
+    </ul>
+
+    <h2 id="light">4. 照明與探知：燈下才看得到人</h2>
+    <p>已成立的事件自帶一圈<span class="lilac">冷白色</span>照明。照明半徑隨人數成長：</p>
+    <pre><code>照明半徑 = clamp(220 × 1.05 ^ (人數 − 1), 220, 375)     1 人 220 m、6 人約 281 m、12 人以上 375 m</code></pre>
+    <p>站在照明裡，你可以打開<strong>探知</strong>。探知有三條硬規則，都是刻意的：</p>
+    <ol>
+      <li><strong>雙向。</strong>打開＝你看得到別人，別人也看得到你。你的頭像會多一圈白色光暈，明示「你正在被看到」。只看不被看就是跟蹤工具，Pinky 不做。</li>
+      <li><strong>走出光圈自動關閉</strong>，並提示。離開現場就不可能被追蹤。</li>
+      <li><strong>探知關著時不顯示「這裡有幾個人」。</strong>給了人數等於單向偷看，破壞對稱性。地圖只說「這盞燈可以開探知」。</li>
+    </ol>
+    <p>打開後畫面底部會出現「○○ 的燈下 · N 人開著探知」與匿名頭像。點一個人，看得到的是：代號、待了幾分鐘、他選擇出示的徽章、他曾完成的火把事件，以及一段說明：你看得到他的條件是什麼、什麼時候會消失。你可以送出招呼，也可以看看就好；對方可以設定不接收招呼。</p>
+
+    <h2 id="events">5. 兩種事件</h2>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Holding Group</th><th>自發聚集</th></tr></thead>
+      <tbody>
+        <tr><th>誰發起</th><td>店家</td><td>任何人</td></tr>
+        <tr><th>建立方式</th><td>後台表單</td><td>貼一個 Google 地圖連結</td></tr>
+        <tr><th>費用</th><td>開團免費</td><td>免費</td></tr>
+        <tr><th>照明半徑</th><td>220–375 m 隨人數</td><td>220–375 m 隨人數</td></tr>
+        <tr><th>成立條件</th><td>無，直接存在</td><td>需達成人數門檻</td></tr>
+        <tr><th>同時擁有上限</th><td>—</td><td>每人最多同時 2 個虛擬預約</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>發起一攤只要三步</h3>
+    <ol>
+      <li><strong>貼 Google 地圖連結。</strong>地點名稱與座標自動帶出，連所在的區、里都會顯示。也可以直接貼座標。縮短連結（maps.app.goo.gl）展不開，改貼完整網址即可。</li>
+      <li><strong>設定。</strong>名稱可留白（用地點名）、今天或明天、24 小時制時間（預設 17:00）、內建人數、人數上限、還需要幾個人才成立、密語、要不要標示主辦買單。</li>
+      <li><strong>完成。</strong>拿到密語卡。還在候補中的話會告訴你：還差幾人、剩多久截止、沒湊到會自己消失。</li>
+    </ol>
+
+    <h2 id="reservation">6. 虛擬預約的生命週期</h2>
+    <p>開攤的那一刻<strong>還不是事件</strong>，只是一個占住地點與時間的虛擬預約。</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>狀態</th><th>條件</th><th>地圖上</th></tr></thead>
+      <tbody>
+        <tr><td><strong>候補中</strong></td><td>人數未達門檻、未到截止</td><td>呼吸的空心虛線圈，標「差 N 人 · 剩 12 分」</td></tr>
+        <tr><td><strong>已成立</strong></td><td>人數達門檻</td><td>實心點＋實線圈，開始發照明。落在店家火把圈內就認那支火把；附近沒有店家，這攤自己就是一盞暫時火把，事件結束即消失。</td></tr>
+        <tr><td><strong>已消失</strong></td><td>到截止仍未達標</td><td>從地圖上移除</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="card promise">
+      <strong>湊不到人的處理，是對使用者的承諾：</strong>它會從地圖上消失，主辦與已加入的人會看到「暫時沒有任何意願 🥺」——它只是一個虛擬預約，從頭到尾沒有變成真的事件，所以沒有人白跑一趟，也沒有人知道你曾經想約。不相干的人只看到那個點淡出。
+    </div>
+
+    <h2 id="passphrase">7. 密語</h2>
+    <p>主辦認人的唯一手段，取代姓名、電話、報名表。</p>
+    <ul>
+      <li>按下「我要去」之後才拿得到；沒加入的人在任何畫面都看不到。</li>
+      <li>每個參加者另附一組不同的號碼（像 <code>A1C</code>、<code>R2K</code>），到場時一起說，主辦可以認第幾號。</li>
+      <li>已知限制：整句加號碼一起被轉傳，目前防不了。密語是暗號，不是門票。</li>
+    </ul>
+
+    <h2 id="tasks">8. 現場任務與火把資源</h2>
+    <p>資源不是滑出來的，是在現場做事換來的。店家可以自己設定任務，例如：</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>任務</th><th>完成獎勵</th></tr></thead>
+      <tbody>
+        <tr><td>在門口感應報到（拿到「真人・今晚有到場」證明）</td><td>解鎖今晚的火把物資</td></tr>
+        <tr><td>店家自訂，例如對店員說出密語</td><td>店家事件</td></tr>
+        <tr><td>跟一個陌生代號碰杯（兩機互碰，不換聯絡方式）</td><td>完成任務</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>完成火把事件會得到經驗值，並且<strong>該火把的照明範圍永久進入你的記憶</strong>。自己發起的攤成立之後，主辦按「完成」也一樣。沒開探知也能完成任務，只是看不到探知者。</p>
+
+    <h2 id="zk">9. 零知識匿名身分</h2>
+    <ul>
+      <li>第一次打開 App，裝置本機產生金鑰對，只上傳承諾值 <code>commit = H(sk‖salt)</code>。伺服器推不回你是誰。</li>
+      <li>代號隨機生成，像「薄荷#4172」。可以隨時燒掉重生——代價是探索記憶歸零，地圖變回全黑。</li>
+      <li>徽章（真人、年滿 18 等）由你選擇是否出示。出示的是證明，不是證件。</li>
+      <li>物資核銷驗的是「這份有效、且沒被同一人重複領」，不是「你是誰」。</li>
+    </ul>
+
+    <h2>一個晚上會長什麼樣</h2>
+    <ol>
+      <li>打開 App，裝置生金鑰，拿到代號。沒有註冊，沒有手機號。</li>
+      <li>地圖全黑，遠處有幾道橘色光芒線。</li>
+      <li>往其中一道走，沿路撥開腳下的霧，路上撿到兩份物資。</li>
+      <li>走進「霧室」的火把圈，看到它的活動，匿名報名。</li>
+      <li>在現場報到、說密語、碰杯。經驗值入帳，霧室的照明範圍永久進入記憶。</li>
+      <li>站在照明裡打開探知，看到燈下另外四個開著探知的人，送出一個招呼。</li>
+      <li>離場。背包裡有幾份未核銷的物資、一張入場證明。地圖上多了一片永久探索過的區域。</li>
+    </ol>
+
+    <p><a class="cta" href="/">打開地圖</a><a class="cta ghost" href="/faq/">常見問題</a></p>
+  </main>
+
+  <footer class="site">
+    <p>Pinky · 台中 · 走到現場才看得到的匿名社交。</p>
+    <p><a href="/about/">是什麼</a> · <a href="/how-it-works/">怎麼運作</a> · <a href="/faq/">常見問題</a> · <a href="/merchants/">給店家</a> · <a href="/llms.txt">llms.txt</a></p>
+    <p>地圖資料：臺中市里界（g0v/twgeojson，CC0）、台中捷運（© OpenStreetMap 貢獻者，ODbL）。</p>
+  </footer>
+</div>
+</body>
+</html>

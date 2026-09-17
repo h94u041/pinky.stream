@@ -7,6 +7,7 @@ const en: typeof zhTW = {
     console: 'Merchant console',
     placeholderMap: 'Placeholder basemap · not real map data',
     lang: '中文',
+    about: 'About',
   },
   nav: {
     detect: 'Detect',

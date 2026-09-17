@@ -213,3 +213,26 @@ Workers 免費 10 萬請求／天、D1 免費 5 GB + 每日 500 萬讀取。超�
 ```
 
 階段 0–2 做完就有一個可以分享的網址；階段 3 做完才是「真的多人」。
+
+---
+
+## 附錄 · 已產出的靜態 SEO/GEO 內容（2026-09-17）
+
+放在 `public/`，build 後原樣進 `dist/`，Pages 上線即生效：
+
+| 路徑 | 內容 | 結構化資料 |
+|---|---|---|
+| `/about/` | Pinky 是什麼：問題、賭注、三個反向設計、匿名的定位、隱私承諾 | Organization、WebSite、AboutPage、BreadcrumbList |
+| `/how-it-works/` | 完整機制與所有數字、公式 | TechArticle |
+| `/faq/` | 16 題問答 | FAQPage（AI 搜尋最常直接引用） |
+| `/merchants/` | 給店家 | WebPage、Service |
+| `/` | App 本體，已加 meta、JSON-LD（WebApplication）、`<noscript>` 摘要 | Organization、WebSite、WebApplication |
+| `/robots.txt` | 放行所有主流 AI 爬蟲，擋 `/api/` | — |
+| `/sitemap.xml` | 靜態版（上後端後改動態） | — |
+| `/llms.txt`、`/llms-full.txt` | 給 LLM 的站點摘要與全文 | — |
+
+**綁好網域後要做一件事**：把所有檔案裡的 `https://pinky.example` 換成正式網址（一行指令）：
+
+```powershell
+Get-ChildItem index.html, public -Recurse -File -Include *.html,*.txt,*.xml | ForEach-Object { (Get-Content $_ -Raw) -replace 'https://pinky\.example', 'https://你的網域' | Set-Content $_ -Encoding utf8 -NoNewline }
+```

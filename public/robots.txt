@@ -1,0 +1,47 @@
+# Pinky — 公開內容頁歡迎所有搜尋引擎與 AI 爬蟲；App 本體（hash 路由）與 API 不需要索引。
+# 注意：Cloudflare 新網域預設封鎖 AI 爬蟲，需在儀表板 AI Crawl Control 另外放行，這個檔案擋不住那層。
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /assets/
+
+# 傳統搜尋引擎
+User-agent: Googlebot
+Allow: /
+User-agent: Bingbot
+Allow: /
+
+# AI 搜尋與助理（供應 ChatGPT、Claude、Perplexity、Gemini 的引用來源）
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: anthropic-ai
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+User-agent: DuckAssistBot
+Allow: /
+User-agent: Amazonbot
+Allow: /
+User-agent: meta-externalagent
+Allow: /
+
+Sitemap: https://pinky.example/sitemap.xml

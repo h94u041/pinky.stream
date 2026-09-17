@@ -37,6 +37,7 @@ function switchLang() {
       <nav class="tabs">
         <button :class="{ active: route.path === '/' }" @click="router.push('/')">{{ t('app.participant') }}</button>
         <button :class="{ active: route.path === '/console' }" @click="router.push('/console')">{{ t('app.console') }}</button>
+        <a class="about" href="/about/">{{ t('app.about') }}</a>
         <button class="lang mono" @click="switchLang">{{ t('app.lang') }}</button>
       </nav>
     </header>
@@ -101,6 +102,15 @@ function switchLang() {
 }
 .tabs .lang {
   font-size: 12px;
+}
+.tabs .about {
+  color: var(--haze);
+  text-decoration: none;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+.tabs .about:hover {
+  color: var(--paper);
 }
 .stage {
   flex: 1;
