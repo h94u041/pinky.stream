@@ -8,7 +8,7 @@
 // mrt.geojson（選填）：LineString 為路線（properties.name、color），Point 為車站（properties.name）。
 //
 // 簡化：Douglas–Peucker（容差 12 m），並丟掉落在世界範圍外的里。
-import { readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 
 const ORIGIN = { lat: 24.1477, lng: 120.6736 }
 const HALF = { x: 8000, y: 7000 }
@@ -25,10 +25,11 @@ function simplify(points, tol) {
   let idx = 0
   const [ax, ay] = points[0]
   const [bx, by] = points[points.length - 1]
-  const len = Math.hypot(bx - ax, by - ay) || 1e-9
+  const len = Math.hypot(bx - ax, by - ay)
   for (let i = 1; i < points.length - 1; i++) {
     const [px, py] = points[i]
-    const d = Math.abs((bx - ax) * (ay - py) - (ax - px) * (by - ay)) / len
+    // 封閉環的首尾同點：退化成「到端點的距離」，否則整個環會被砍成兩點
+    const d = len < 1e-6 ? Math.hypot(px - ax, py - ay) : Math.abs((bx - ax) * (ay - py) - (ax - px) * (by - ay)) / len
     if (d > maxD) {
       maxD = d
       idx = i
@@ -61,14 +62,23 @@ for (const f of vg.features ?? []) {
   }
   if (!rings.length) continue
   villages.push({
-    n: prop(f.properties, 'VILLNAME', 'V_Name', '里名', 'name'),
+    n: prop(f.properties, 'VILLNAME', 'VILLAGENAM', 'V_Name', '里名', 'name'),
     d: prop(f.properties, 'TOWNNAME', 'T_Name', '區名', 'town'),
     r: rings,
   })
 }
 
-const mrt = []
+let mrt = []
+let mrtSource = 'none'
+const outPath = new URL('../src/data/map.json', import.meta.url)
+if (!mrtPath && existsSync(outPath)) {
+  // 沒給捷運圖資：沿用現有 map.json 裡的（可能是概略座標）
+  const prev = JSON.parse(readFileSync(outPath, 'utf8'))
+  mrt = prev.mrt ?? []
+  mrtSource = prev.mrtSource ?? (prev.source === 'placeholder' ? 'approximate' : 'real')
+}
 if (mrtPath) {
+  mrtSource = 'real'
   const mg = JSON.parse(readFileSync(mrtPath, 'utf8'))
   const lines = new Map()
   const stations = []
@@ -90,7 +100,7 @@ if (mrtPath) {
   }
 }
 
-const out = { source: 'real', villages, mrt }
+const out = { source: 'real', mrtSource, villages, mrt }
 const json = JSON.stringify(out)
-writeFileSync(new URL('../src/data/map.json', import.meta.url), json)
+writeFileSync(outPath, json)
 console.log(`villages=${villages.length} mrt=${mrt.length} size=${(json.length / 1024).toFixed(0)}KB`)

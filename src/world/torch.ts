@@ -26,7 +26,7 @@ export function crowdOf(self: TorchLike, others: readonly TorchLike[]): number {
  * 有效半徑的目標值（4.3 規則二，群聚版）：
  *   mult = min(1.30, 1.05^crowd)
  *   eff  = clamp(R_base × mult, TORCH_MIN, TORCH_MAX)
- * 規則一由 TORCH_MIN 保證：永遠 ≥ 200 m > 使用者的 100 m。
+ * 規則一由 TORCH_MIN 保證：永遠 ≥ 220 m > 使用者的 100 m。
  */
 export function effectiveTarget(baseR: number, crowd: number): number {
   const mult = Math.min(CROWD_MAX_MULT, Math.pow(CROWD_GROWTH, crowd))

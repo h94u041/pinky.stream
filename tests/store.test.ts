@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { toLatLng } from '../src/world/geo'
-import { LIGHT_R, MAX_ACTIVE_RESERVATIONS, SUPPLY_PICKUP_R, TORCH_MIN } from '../src/world/rules'
+import { lightRadius, MAX_ACTIVE_RESERVATIONS, SUPPLY_PICKUP_R, TORCH_MIN } from '../src/world/rules'
 import {
   addHolding,
   addSupply,
@@ -61,7 +61,7 @@ function gatheringAt(x: number, y: number, extra: Partial<GatheringInput> = {}):
 beforeEach(reset)
 
 describe('虛擬預約生命週期（4.7）', () => {
-  it('開攤只是候補；湊齊才成立、發 150 m 照明、沒店家時自成暫時火把', () => {
+  it('開攤只是候補；湊齊才成立、發照明、沒店家時自成暫時火把', () => {
     const g = createGathering(gatheringAt(3000, 3000))
     if ('error' in g) throw new Error(g.error)
     expect(g.status).toBe('pending')
@@ -74,9 +74,9 @@ describe('虛擬預約生命週期（4.7）', () => {
     const temp = world.torches.find((t) => t.id === g.tempTorchId)!
     expect(temp.temporary).toBe(true)
     expect(temp.baseR).toBe(TORCH_MIN)
-    expect(lightSources.value.find((s) => s.id === g.id)?.r).toBe(LIGHT_R.gathering)
+    expect(lightSources.value.find((s) => s.id === g.id)?.r).toBe(lightRadius(2))
     // 成立 → 那塊地方進入記憶
-    expect(world.memories.some((m) => m.x === g.x && m.y === g.y && m.r === LIGHT_R.gathering)).toBe(true)
+    expect(world.memories.some((m) => m.x === g.x && m.y === g.y && m.r === lightRadius(2))).toBe(true)
   })
 
   it('落在燃燒中店家火把圈內 → 認火把，不另生暫時火把', () => {
@@ -131,7 +131,7 @@ describe('虛擬預約生命週期（4.7）', () => {
 describe('探知（4.5）', () => {
   it('不在照明裡開不了；走出光圈自動關閉', () => {
     const torch = addTorch({ name: '霧室', ownerId: 'm', x: 0, y: 0, baseR: 260, lit: true, temporary: false, burnHours: 6 })
-    addHolding({ torchId: torch.id, title: '舞會', startAt: Date.now(), capacity: 10, entry: null, tasks: [] })
+    addHolding({ torchId: torch.id, title: '舞會', startAt: Date.now(), capacity: 10, entry: null, tasks: [], joined: 1 })
     world.player.x = 1000
     toggleDetect()
     expect(world.player.detectOn).toBe(false)
@@ -141,7 +141,7 @@ describe('探知（4.5）', () => {
     toggleDetect()
     expect(world.player.detectOn).toBe(true)
 
-    world.player.x = LIGHT_R.holding + 50
+    world.player.x = lightRadius(1) + 50
     tick()
     expect(world.player.detectOn).toBe(false)
   })

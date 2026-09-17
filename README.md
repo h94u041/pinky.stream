@@ -2,7 +2,7 @@
 
 真實的城市地圖預設蓋著戰爭迷霧；店家點火把、投物資，任何人貼一個 Google 地圖連結就能開一攤。
 互動原型，Vue 3 + TypeScript + Vite，UI 使用 [Element Plus](https://element-plus.org/zh-TW/)。
-產品規格與設計語言見 [memo.md](memo.md)。
+產品規格與設計語言見 [memo2.md](memo2.md)（[memo.md](memo.md) 是原始版）。
 
 ## 開始
 
@@ -18,13 +18,15 @@ npm run build    # 型別檢查 + 打包到 dist/
 
 ## 圖資
 
-目前內建的是示意底圖（`npm run map:placeholder` 產生）。要換成台中市真實里界與捷運：
+內建 `src/data/map.json` 是真實圖資：台中市里界（[g0v/twgeojson](https://github.com/g0v/twgeojson) twVillage1982，CC0，只取世界範圍內 312 個里）＋ 台中捷運綠線 18 站（OpenStreetMap relation 11330355，ODbL，已轉成 `data-src/taichung_mrt.geojson`）。
+
+重建（里界 GeoJSON 太大不進 repo，從 g0v 下載）：
 
 ```powershell
-node scripts/build-map-data.mjs <台中里界.geojson> [捷運.geojson]
+node scripts/build-map-data.mjs <twVillage1982.geo.json> data-src/taichung_mrt.geojson
 ```
 
-會輸出 `src/data/map.json`，畫面自動改用。
+沒有圖資時可用 `npm run map:placeholder` 產生示意底圖。
 
 ## 結構
 

@@ -7,8 +7,8 @@
 /** 使用者自己的探索半徑（4.2、§10） */
 export const PLAYER_R = 100
 
-/** 火把有效半徑下限（§10）：永遠比使用者自己大 */
-export const TORCH_MIN = 200
+/** 火把有效半徑下限（2026-09-17 使用者拍板：220 m）：永遠比使用者自己大 */
+export const TORCH_MIN = 220
 
 /** 火把群聚後的有效半徑上限（4.3：「四、五支擠在同一條街 → 增加到 350 m 上限」） */
 export const TORCH_MAX = 350
@@ -25,11 +25,19 @@ export const CROWD_MAX_MULT = 1.3
  */
 export const TORCH_SMOOTH_TAU_MS = 20_000
 
-/** 已成立事件的照明半徑（4.2） */
-export const LIGHT_R = {
-  holding: 220,
-  gathering: 150,
-} as const
+/**
+ * 已成立事件的照明半徑（2026-09-17 使用者拍板）：220 m 起，隨人數增多而變大，最大 375 m。
+ *   r = clamp(LIGHT_MIN × LIGHT_GROWTH^(人數 − 1), LIGHT_MIN, LIGHT_MAX)
+ * Holding Group 與自發聚集同一套。
+ */
+export const LIGHT_MIN = 220
+export const LIGHT_MAX = 375
+export const LIGHT_GROWTH = 1.05
+
+export function lightRadius(people: number): number {
+  const n = Math.max(1, Math.floor(people))
+  return Math.min(LIGHT_MAX, Math.max(LIGHT_MIN, LIGHT_MIN * Math.pow(LIGHT_GROWTH, n - 1)))
+}
 
 /** 物資自動拾取距離（4.4） */
 export const SUPPLY_PICKUP_R = 100

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { mapData } from '../map/mapdata'
-import { LIGHT_R, PALETTE } from '../world/rules'
-import { world } from '../world/store'
+import { LIGHT_MIN, PALETTE } from '../world/rules'
+import { gatheringLightR, world } from '../world/store'
 
 /**
  * 店家後台的地圖：沒有迷霧。實心暖光＝有效半徑，虛線鬼圈＝基礎半徑；
@@ -121,7 +121,7 @@ function draw(t: number) {
     if (g.status === 'pending') {
       ctx.setLineDash([4, 4])
       ctx.beginPath()
-      ctx.arc(px, py, Math.max(6, LIGHT_R.gathering * cam.scale * (0.92 + 0.08 * Math.sin(t / 500))), 0, Math.PI * 2)
+      ctx.arc(px, py, Math.max(6, LIGHT_MIN * cam.scale * (0.92 + 0.08 * Math.sin(t / 500))), 0, Math.PI * 2)
       ctx.stroke()
       ctx.setLineDash([])
     } else {
@@ -129,7 +129,7 @@ function draw(t: number) {
       ctx.arc(px, py, 4, 0, Math.PI * 2)
       ctx.fill()
       ctx.beginPath()
-      ctx.arc(px, py, LIGHT_R.gathering * cam.scale, 0, Math.PI * 2)
+      ctx.arc(px, py, gatheringLightR(g) * cam.scale, 0, Math.PI * 2)
       ctx.stroke()
     }
   }

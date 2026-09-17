@@ -74,6 +74,6 @@ const mrt = [
   },
 ]
 
-const out = { source: 'placeholder', note: '示意底圖：非真實圖資', villages, mrt }
+const out = { source: 'placeholder', mrtSource: 'approximate', note: '示意底圖：非真實圖資', villages, mrt }
 writeFileSync(new URL('../src/data/map.json', import.meta.url), JSON.stringify(out))
 console.log(`villages=${villages.length} mrt=${mrt.length}`)

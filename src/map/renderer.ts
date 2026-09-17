@@ -1,5 +1,5 @@
 import { WORLD_HALF } from '../world/geo'
-import { FOG, LIGHT_R, PALETTE } from '../world/rules'
+import { FOG, LIGHT_MIN, PALETTE } from '../world/rules'
 import type { Gathering, HoldingGroup, Memory, Stranger, Supply, Torch } from '../world/types'
 import type { LightSource } from '../world/store'
 import { mapData } from './mapdata'
@@ -359,6 +359,7 @@ export class MapRenderer {
     const { ctx } = this
     const s = this.cam.scale
     const t = input.t
+    const lightR = (id: string) => input.lights.find((l) => l.id === id)?.r ?? LIGHT_MIN
 
     // 火把本體（活的：只有視野內才有火焰；記憶中只剩灰色標記）
     for (const torch of input.torches) {
@@ -443,7 +444,7 @@ export class MapRenderer {
         ctx.setLineDash([])
         ctx.lineWidth = 1
         ctx.beginPath()
-        ctx.arc(px, py, LIGHT_R.holding * s, 0, Math.PI * 2)
+        ctx.arc(px, py, lightR(h.id) * s, 0, Math.PI * 2)
         ctx.stroke()
       }
       ctx.globalAlpha = 1
@@ -483,7 +484,7 @@ export class MapRenderer {
         ctx.setLineDash([6, 6])
         ctx.lineWidth = 1.2
         ctx.beginPath()
-        ctx.arc(px, py, Math.max(10, LIGHT_R.gathering * s * breathe), 0, Math.PI * 2)
+        ctx.arc(px, py, Math.max(10, LIGHT_MIN * s * breathe), 0, Math.PI * 2)
         ctx.stroke()
         ctx.setLineDash([])
         ctx.beginPath()
@@ -498,7 +499,7 @@ export class MapRenderer {
         ctx.fill()
         if (visible) {
           ctx.beginPath()
-          ctx.arc(px, py, LIGHT_R.gathering * s, 0, Math.PI * 2)
+          ctx.arc(px, py, lightR(g.id) * s, 0, Math.PI * 2)
           ctx.stroke()
         }
       }

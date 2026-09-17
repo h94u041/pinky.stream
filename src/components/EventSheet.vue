@@ -4,11 +4,12 @@ import { useI18n } from 'vue-i18n'
 import { useFmt } from '../composables/useFmt'
 import type { Hit } from '../map/renderer'
 import { dist } from '../world/geo'
-import { LIGHT_R, MAX_ACTIVE_RESERVATIONS } from '../world/rules'
+import { MAX_ACTIVE_RESERVATIONS } from '../world/rules'
 import {
   activeReservationCount,
   completeGathering,
   completeTask,
+  holdingLightR,
   isVisible,
   joinGathering,
   joinHolding,
@@ -38,7 +39,7 @@ const supply = computed(() => (props.hit?.type === 'supply' ? world.supplies.fin
 
 const holdingVisible = computed(() => !!torch.value && isVisible(torch.value.x, torch.value.y))
 const gatheringVisible = computed(() => !!gathering.value && isVisible(gathering.value.x, gathering.value.y))
-const onSiteHolding = computed(() => !!torch.value && dist(torch.value.x, torch.value.y, world.player.x, world.player.y) <= LIGHT_R.holding)
+const onSiteHolding = computed(() => !!torch.value && dist(torch.value.x, torch.value.y, world.player.x, world.player.y) <= holdingLightR(holding.value!))
 const isHost = computed(() => gathering.value?.hostId === world.player.id)
 const amIn = computed(() => !!gathering.value && world.player.id in gathering.value.joined)
 const myCode = computed(() => (gathering.value ? gathering.value.joined[world.player.id] : null))

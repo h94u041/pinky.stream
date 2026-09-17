@@ -14,6 +14,8 @@ export interface MrtLine {
 }
 export interface MapData {
   source: 'placeholder' | 'real'
+  /** 捷運線：real＝真實圖資、approximate＝概略座標、none＝沒有 */
+  mrtSource?: 'real' | 'approximate' | 'none'
   note?: string
   villages: Village[]
   mrt: MrtLine[]

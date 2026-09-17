@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { parseGoogleMapsLink } from '../src/world/gmaps'
 import { inWorld, toLatLng, toWorld } from '../src/world/geo'
-import { LIGHT_R, PLAYER_R, TORCH_MAX, TORCH_MIN } from '../src/world/rules'
+import { LIGHT_MAX, LIGHT_MIN, lightRadius, PLAYER_R, TORCH_MAX, TORCH_MIN } from '../src/world/rules'
 import { crowdOf, effectiveTarget, smoothToward } from '../src/world/torch'
 
 describe('火把規則（memo 4.3 / §10）', () => {
-  it('規則一：火把有效半徑永遠 ≥ 200 m，比使用者自己的 100 m 大', () => {
+  it('規則一：火把有效半徑永遠 ≥ 220 m，比使用者自己的 100 m 大', () => {
     expect(PLAYER_R).toBe(100)
-    expect(TORCH_MIN).toBe(200)
+    expect(TORCH_MIN).toBe(220)
     expect(TORCH_MIN).toBeGreaterThan(PLAYER_R)
     expect(effectiveTarget(50, 0)).toBe(TORCH_MIN)
     expect(effectiveTarget(120, 0)).toBe(TORCH_MIN)
@@ -39,9 +39,14 @@ describe('火把規則（memo 4.3 / §10）', () => {
     expect(smoothToward(Number.NaN, 250, 1000)).toBe(250)
   })
 
-  it('照明半徑：Holding Group 220 m、自發聚集 150 m（4.2）', () => {
-    expect(LIGHT_R.holding).toBe(220)
-    expect(LIGHT_R.gathering).toBe(150)
+  it('照明半徑：220 m 起隨人數成長，最大 375 m', () => {
+    expect(LIGHT_MIN).toBe(220)
+    expect(LIGHT_MAX).toBe(375)
+    expect(lightRadius(1)).toBe(220)
+    expect(lightRadius(2)).toBeCloseTo(231, 0)
+    expect(lightRadius(6)).toBeCloseTo(280.8, 0)
+    expect(lightRadius(30)).toBe(375)
+    expect(lightRadius(0)).toBe(220)
   })
 })
 

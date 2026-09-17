@@ -3,7 +3,7 @@ import { i18n } from '../i18n'
 import { BADGE_POOL, commitOf, passphraseSuffix, randomCodename, randomHex, uid, type Badge } from './codename'
 import { dist, inWorld, toWorld } from './geo'
 import {
-  LIGHT_R,
+  lightRadius,
   MAX_ACTIVE_RESERVATIONS,
   PLAYER_R,
   SUPPLY_PICKUP_R,
@@ -208,6 +208,14 @@ export interface LightSource {
   id: string
 }
 
+/** 事件照明半徑：隨人數成長（rules.lightRadius） */
+export function holdingLightR(h: HoldingGroup): number {
+  return lightRadius(h.joined)
+}
+export function gatheringLightR(g: Gathering): number {
+  return lightRadius(joinedCount(g))
+}
+
 /** 目前所有視野來源（4.2）。 */
 export const lightSources = computed<LightSource[]>(() => {
   const out: LightSource[] = [
@@ -218,10 +226,10 @@ export const lightSources = computed<LightSource[]>(() => {
   }
   for (const h of world.holdings) {
     const t = torchById(h.torchId)
-    if (t) out.push({ x: t.x, y: t.y, r: LIGHT_R.holding, kind: 'holding', id: h.id })
+    if (t) out.push({ x: t.x, y: t.y, r: holdingLightR(h), kind: 'holding', id: h.id })
   }
   for (const g of world.gatherings) {
-    if (g.status === 'formed') out.push({ x: g.x, y: g.y, r: LIGHT_R.gathering, kind: 'gathering', id: g.id })
+    if (g.status === 'formed') out.push({ x: g.x, y: g.y, r: gatheringLightR(g), kind: 'gathering', id: g.id })
   }
   return out
 })
@@ -393,7 +401,7 @@ export function completeTask(holdingId: string, taskId: string) {
   if (!h || !t || t.done) return
   const torch = torchById(h.torchId)
   if (!torch) return
-  if (dist(torch.x, torch.y, world.player.x, world.player.y) > LIGHT_R.holding) {
+  if (dist(torch.x, torch.y, world.player.x, world.player.y) > holdingLightR(h)) {
     toast(tr('event.taskNeedPresence'), 'fire')
     return
   }
@@ -517,7 +525,7 @@ function formGathering(g: Gathering) {
     })
     g.tempTorchId = t.id
   }
-  memorize(g.x, g.y, LIGHT_R.gathering)
+  memorize(g.x, g.y, gatheringLightR(g))
   if (world.player.id in g.joined) {
     world.formedPending.push(g.id)
     toast(tr('formed.title'), 'lilac')
@@ -535,7 +543,7 @@ export function completeGathering(id: string) {
   const g = world.gatherings.find((x) => x.id === id)
   if (!g || g.status !== 'formed' || g.hostId !== world.player.id || g.completedByHost) return
   g.completedByHost = true
-  grantEventCompletion(g.title, g.x, g.y, LIGHT_R.gathering)
+  grantEventCompletion(g.title, g.x, g.y, gatheringLightR(g))
   endGathering(g)
 }
 
