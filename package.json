@@ -5,21 +5,29 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc -b && tsc -p worker/tsconfig.json && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "map:placeholder": "node scripts/make-placeholder-map.mjs",
     "map:build": "node scripts/build-map-data.mjs",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "dev:api": "wrangler dev",
+    "db:init": "wrangler d1 execute pinky --local --file worker/schema.sql",
+    "db:seed": "wrangler d1 execute pinky --local --file worker/seed.sql",
+    "db:init:remote": "wrangler d1 execute pinky --remote --file worker/schema.sql",
+    "db:seed:remote": "wrangler d1 execute pinky --remote --file worker/seed.sql",
+    "seed:make": "node worker/scripts/make-seed.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
     "element-plus": "^2.14.5",
+    "hono": "^4.13.8",
     "vue": "^3.5.42",
     "vue-i18n": "^11.4.10",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260917.1",
     "@types/node": "^24.13.3",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/tsconfig": "^0.9.1",

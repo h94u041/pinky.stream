@@ -10,6 +10,7 @@ import {
   TORCH_MIN,
   XP_PER_EVENT,
 } from './rules'
+import * as online from './online'
 import { crowdOf, effectiveTarget, smoothToward } from './torch'
 import type {
   Gathering,
@@ -43,6 +44,8 @@ export interface WorldState {
   formedPending: string[]
   /** 真實定位開著：點地圖走路停用 */
   gpsOn: boolean
+  /** 線上模式：世界來自 /api/world；否則是本機示範世界 */
+  online: boolean
 }
 
 const MEMORY_KEY = 'pinky.memories.v1'
@@ -61,6 +64,7 @@ export const world = reactive<WorldState>({
     detectOn: false,
     xp: 0,
     lampBoostUntil: null,
+    completions: [],
     backpack: { supplies: [], proofs: [] },
   },
   torches: [],
@@ -73,6 +77,7 @@ export const world = reactive<WorldState>({
   dissolvedPending: [],
   formedPending: [],
   gpsOn: false,
+  online: false,
 })
 
 const tr = (key: string, params?: Record<string, unknown>) => i18n.global.t(key, params ?? {})
@@ -163,6 +168,8 @@ export async function burnIdentity() {
     /* ignore */
   }
   applyIdentity(idn)
+  world.player.completions = []
+  if (world.online) await online.connect()
   memorize(world.player.x, world.player.y, playerRadius())
   return idn
 }
@@ -271,10 +278,12 @@ export function toggleDetect() {
   const p = world.player
   if (p.detectOn) {
     p.detectOn = false
+    if (world.online) void online.stopPresence()
     return
   }
   if (!currentLight.value) return
   p.detectOn = true
+  if (world.online) online.startPresence()
 }
 
 /* ---------- 火把 ---------- */
@@ -348,6 +357,10 @@ function tryPickup() {
     if (dist(s.x, s.y, p.x, p.y) > SUPPLY_PICKUP_R) continue
     if (!isVisible(s.x, s.y)) continue
     if (supplyLocked(s)) continue
+    if (world.online) {
+      void online.pickup(s)
+      continue
+    }
     const already = p.backpack.supplies.filter((b) => b.supplyId === s.id).length
     if (already >= s.perPerson) continue
     s.remaining -= 1
@@ -389,6 +402,7 @@ export function addHolding(input: Omit<HoldingGroup, 'id' | 'joined' | 'joinedBy
 export function joinHolding(id: string) {
   const h = world.holdings.find((x) => x.id === id)
   if (!h || h.joinedByMe) return
+  if (world.online) return void online.joinHolding(id)
   if (h.joined >= h.capacity) {
     toast(tr('event.full'), 'pinky')
     return
@@ -402,6 +416,7 @@ export function completeTask(holdingId: string, taskId: string) {
   const h = world.holdings.find((x) => x.id === holdingId)
   const t = h?.tasks.find((x) => x.id === taskId)
   if (!h || !t || t.done) return
+  if (world.online) return void online.completeTask(holdingId, taskId)
   const torch = torchById(h.torchId)
   if (!torch) return
   if (dist(torch.x, torch.y, world.player.x, world.player.y) > holdingLightR(h)) {
@@ -451,7 +466,8 @@ export function canTakeReservation(): boolean {
   return activeReservationCount() < MAX_ACTIVE_RESERVATIONS
 }
 
-export function createGathering(input: GatheringInput): Gathering | { error: string } {
+export async function createGathering(input: GatheringInput): Promise<Gathering | { error: string }> {
+  if (world.online) return online.createGathering(input)
   const { x, y } = toWorld(input.lat, input.lng)
   if (!inWorld(x, y)) return { error: 'out-of-world' }
   if (!canTakeReservation()) return { error: 'too-many' }
@@ -490,10 +506,11 @@ export function needOf(g: Gathering): number {
 
 /** 已加入人數 = 內建人數（含主辦）+ 後來加入的人 */
 export function joinedCount(g: Gathering): number {
-  return g.builtIn + Object.keys(g.joined).length - 1
+  return g.joinedCount ?? g.builtIn + Object.keys(g.joined).length - 1
 }
 
-export function joinGathering(id: string, userId = world.player.id): string | null {
+export async function joinGathering(id: string, userId = world.player.id): Promise<string | null> {
+  if (world.online && userId === world.player.id) return online.joinGathering(id)
   const g = world.gatherings.find((x) => x.id === id)
   if (!g || g.status === 'dissolved') return 'gone'
   if (userId in g.joined) return null
@@ -545,6 +562,7 @@ function dissolveGathering(g: Gathering) {
 export function completeGathering(id: string) {
   const g = world.gatherings.find((x) => x.id === id)
   if (!g || g.status !== 'formed' || g.hostId !== world.player.id || g.completedByHost) return
+  if (world.online) return void online.completeGathering(id)
   g.completedByHost = true
   grantEventCompletion(g.title, g.x, g.y, gatheringLightR(g))
   endGathering(g)
@@ -564,8 +582,9 @@ export function simulateJoin(id: string) {
   if (!g) return
   const s = world.strangers[Math.floor(Math.random() * world.strangers.length)]
   const who = s ? s.id : 'npc_' + randomHex(3)
-  const r = joinGathering(id, who)
-  if (r === 'full') toast(tr('event.full'), 'lilac')
+  void joinGathering(id, who).then((r) => {
+    if (r === 'full') toast(tr('event.full'), 'lilac')
+  })
 }
 
 export function dismissDissolved(id: string) {
@@ -587,15 +606,15 @@ export function tick() {
 
   // 火把有效半徑：目標由群聚決定，實際值緩慢跟上
   for (const t of world.torches) {
-    if (t.burnHours !== null && t.lit && t.litAt !== null && now - t.litAt > t.burnHours * 3_600_000) {
+    if (!world.online && t.burnHours !== null && t.lit && t.litAt !== null && now - t.litAt > t.burnHours * 3_600_000) {
       setTorchLit(t.id, false)
     }
-    const target = t.lit ? effectiveTarget(t.baseR, torchCrowd(t)) : t.eff
+    const target = t.lit ? (world.online ? (t.target ?? t.eff) : effectiveTarget(t.baseR, torchCrowd(t))) : t.eff
     t.eff = smoothToward(t.eff, target, dt)
   }
 
-  // 虛擬預約：到截止仍未達標 → 消失；成立且開始超過 3 小時 → 結束
-  for (const g of world.gatherings) {
+  // 虛擬預約：到截止仍未達標 → 消失；成立且開始超過 3 小時 → 結束（線上模式由伺服器做）
+  for (const g of world.online ? [] : world.gatherings) {
     if (g.status === 'pending' && now >= g.deadline) dissolveGathering(g)
     if (g.status === 'formed' && now >= g.startAt + 3 * 3_600_000) {
       endGathering(g)
@@ -606,6 +625,7 @@ export function tick() {
   // 探知：走出光圈自動關閉（4.5 規則 2）
   if (world.player.detectOn && !currentLight.value) {
     world.player.detectOn = false
+    if (world.online) void online.stopPresence()
     toast(tr('detect.autoOff'), 'lilac')
   }
 
@@ -655,6 +675,13 @@ export function setPlayerPosition(x: number, y: number) {
 
 /* ---------- 初始化 ---------- */
 
+/** 線上模式：世界來自伺服器，只把玩家放到起點（台中車站前） */
+function seedPlayerStart(w: WorldState) {
+  const p = toWorld(24.1372, 120.6862)
+  w.player.x = p.x
+  w.player.y = p.y
+}
+
 export async function bootWorld(seed: (w: WorldState) => void) {
   let idn = loadIdentity()
   const fresh = !idn
@@ -663,7 +690,13 @@ export async function bootWorld(seed: (w: WorldState) => void) {
   }
   applyIdentity(idn)
   world.memories = loadMemories()
-  seed(world)
+  const connected = await online.connect()
+  if (!connected) {
+    seed(world)
+    toast(tr('online.offline'), 'fire')
+  } else {
+    seedPlayerStart(world)
+  }
   memorize(world.player.x, world.player.y, playerRadius())
   return fresh
 }

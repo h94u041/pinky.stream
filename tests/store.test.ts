@@ -61,14 +61,14 @@ function gatheringAt(x: number, y: number, extra: Partial<GatheringInput> = {}):
 beforeEach(reset)
 
 describe('虛擬預約生命週期（4.7）', () => {
-  it('開攤只是候補；湊齊才成立、發照明、沒店家時自成暫時火把', () => {
-    const g = createGathering(gatheringAt(3000, 3000))
+  it('開攤只是候補；湊齊才成立、發照明、沒店家時自成暫時火把', async () => {
+    const g = await createGathering(gatheringAt(3000, 3000))
     if ('error' in g) throw new Error(g.error)
     expect(g.status).toBe('pending')
     expect(g.title).toBe('華山') // 名稱留白就用地點名
     expect(lightSources.value.some((s) => s.id === g.id)).toBe(false)
 
-    expect(joinGathering(g.id, 'npc_1')).toBeNull()
+    expect(await joinGathering(g.id, 'npc_1')).toBeNull()
     expect(g.status).toBe('formed')
     expect(g.tempTorchId).not.toBeNull()
     const temp = world.torches.find((t) => t.id === g.tempTorchId)!
@@ -79,18 +79,18 @@ describe('虛擬預約生命週期（4.7）', () => {
     expect(world.memories.some((m) => m.x === g.x && m.y === g.y && m.r === lightRadius(2))).toBe(true)
   })
 
-  it('落在燃燒中店家火把圈內 → 認火把，不另生暫時火把', () => {
+  it('落在燃燒中店家火把圈內 → 認火把，不另生暫時火把', async () => {
     addTorch({ name: '霧室', ownerId: 'm', x: 0, y: 0, baseR: 260, lit: true, temporary: false, burnHours: 6 })
-    const g = createGathering(gatheringAt(50, 50))
+    const g = await createGathering(gatheringAt(50, 50))
     if ('error' in g) throw new Error(g.error)
-    joinGathering(g.id, 'npc_1')
+    await joinGathering(g.id, 'npc_1')
     expect(g.status).toBe('formed')
     expect(g.torchId).not.toBeNull()
     expect(g.tempTorchId).toBeNull()
   })
 
-  it('到截止還沒湊齊 → 消失，並通知主辦', () => {
-    const g = createGathering(gatheringAt(3000, 3000, { startAt: Date.now() + 1000 }))
+  it('到截止還沒湊齊 → 消失，並通知主辦', async () => {
+    const g = await createGathering(gatheringAt(3000, 3000, { startAt: Date.now() + 1000 }))
     if ('error' in g) throw new Error(g.error)
     tick()
     expect(g.status).toBe('pending')
@@ -100,31 +100,31 @@ describe('虛擬預約生命週期（4.7）', () => {
     expect(world.dissolvedPending).toContain(g.id)
   })
 
-  it('每個加入者拿到不同的密語附加號碼（4.8）', () => {
-    const g = createGathering(gatheringAt(3000, 3000, { needMore: 3 }))
+  it('每個加入者拿到不同的密語附加號碼（4.8）', async () => {
+    const g = await createGathering(gatheringAt(3000, 3000, { needMore: 3 }))
     if ('error' in g) throw new Error(g.error)
-    joinGathering(g.id, 'a')
-    joinGathering(g.id, 'b')
+    await joinGathering(g.id, 'a')
+    await joinGathering(g.id, 'b')
     const codes = Object.values(g.joined)
     expect(codes).toHaveLength(3)
     expect(codes.every((c) => /^[A-Z]\d[A-Z]$/.test(c))).toBe(true)
   })
 
-  it('人數上限與「最多同時 2 個虛擬預約」（4.6）', () => {
-    const g = createGathering(gatheringAt(3000, 3000, { cap: 2, needMore: 5 }))
+  it('人數上限與「最多同時 2 個虛擬預約」（4.6）', async () => {
+    const g = await createGathering(gatheringAt(3000, 3000, { cap: 2, needMore: 5 }))
     if ('error' in g) throw new Error(g.error)
-    expect(joinGathering(g.id, 'a')).toBeNull()
-    expect(joinGathering(g.id, 'b')).toBe('full')
+    expect(await joinGathering(g.id, 'a')).toBeNull()
+    expect(await joinGathering(g.id, 'b')).toBe('full')
 
-    createGathering(gatheringAt(-3000, 3000))
+    await createGathering(gatheringAt(-3000, 3000))
     expect(canTakeReservation()).toBe(false)
     expect(MAX_ACTIVE_RESERVATIONS).toBe(2)
-    const third = createGathering(gatheringAt(-3000, -3000))
+    const third = await createGathering(gatheringAt(-3000, -3000))
     expect(third).toEqual({ error: 'too-many' })
   })
 
-  it('地圖範圍外要明確拒絕', () => {
-    expect(createGathering(gatheringAt(50_000, 0))).toEqual({ error: 'out-of-world' })
+  it('地圖範圍外要明確拒絕', async () => {
+    expect(await createGathering(gatheringAt(50_000, 0))).toEqual({ error: 'out-of-world' })
   })
 })
 

@@ -30,3 +30,6 @@ src/components.d.ts
 # wrangler
 .wrangler/
 .dev.vars
+
+# seed.sql 含示範店家密碼雜湊，不進 repo
+worker/seed.sql

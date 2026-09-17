@@ -31,9 +31,12 @@ export function randomPassphrase(rng: () => number = Math.random): string {
 }
 
 /** 4.10：只上傳 commit = H(sk‖salt)。原型用 SubtleCrypto 做 SHA-256。 */
+/** 瀏覽器與 Workers 都有 crypto；http 頁面沒有 subtle */
+const webCrypto = (globalThis as { crypto?: Crypto }).crypto
+
 export async function commitOf(sk: string, salt: string): Promise<string> {
   const text = `${sk}‖${salt}`
-  if (typeof globalThis.crypto?.subtle?.digest === 'function') {
+  if (typeof webCrypto?.subtle?.digest === 'function') {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
     return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('')
   }
@@ -52,7 +55,7 @@ export async function commitOf(sk: string, salt: string): Promise<string> {
 
 export function randomHex(bytes: number): string {
   const a = new Uint8Array(bytes)
-  if (typeof globalThis.crypto?.getRandomValues === 'function') crypto.getRandomValues(a)
+  if (typeof webCrypto?.getRandomValues === 'function') webCrypto.getRandomValues(a)
   else for (let i = 0; i < bytes; i++) a[i] = Math.floor(Math.random() * 256)
   return [...a].map((b) => b.toString(16).padStart(2, '0')).join('')
 }

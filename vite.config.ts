@@ -23,4 +23,8 @@ export default defineConfig({
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
+  server: {
+    // 本機開發：/api 轉給 wrangler dev（npm run dev:api）
+    proxy: { '/api': 'http://127.0.0.1:8787' },
+  },
 })

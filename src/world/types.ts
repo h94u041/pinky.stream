@@ -10,6 +10,8 @@ export interface Torch {
   baseR: number
   /** 目前有效半徑（平滑後） */
   eff: number
+  /** 線上模式：伺服器算出的目標有效半徑 */
+  target?: number
   lit: boolean
   /** 4.7：無商家的已成立事件會變成暫時火把，事件結束即消失 */
   temporary: boolean
@@ -56,7 +58,7 @@ export interface HoldingGroup {
   completedByMe: boolean
 }
 
-export type GatheringStatus = 'pending' | 'formed' | 'dissolved'
+export type GatheringStatus = 'pending' | 'formed' | 'dissolved' | 'ended'
 
 export interface Gathering {
   id: string
@@ -84,6 +86,8 @@ export interface Gathering {
   tempTorchId: string | null
   completedByHost: boolean
   dissolvedAt: number | null
+  /** 線上模式：伺服器算的已加入人數（離線用 joined 算） */
+  joinedCount?: number
 }
 
 export interface Stranger {
@@ -129,6 +133,8 @@ export interface Player {
   xp: number
   /** 照明燈物資：探索半徑 +35% 到此時間為止 */
   lampBoostUntil: number | null
+  /** 曾完成的火把事件（線上模式由伺服器給） */
+  completions: string[]
   backpack: {
     supplies: PickedSupply[]
     proofs: Proof[]

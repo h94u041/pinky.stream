@@ -64,6 +64,15 @@ Cloudflare 對新網域**預設封鎖 AI 爬蟲**，不關掉的話 ChatGPT／Pe
 
 ## 階段 3 · 後端：Workers + D1（AI 做，需要你按幾次授權）
 
+> **2026-09-18 更新：程式已完成、本機測過，尚未部署。** 部署前的三步（AI 做，需你同意）：
+> ```powershell
+> npm run db:init:remote                       # 建表
+> DEMO_MERCHANT_PASSWORD=<你選> npm run seed:make ; npm run db:seed:remote   # 示範世界 + 示範店家 demo@pinky.stream
+> npx wrangler secret put MERCHANT_INVITE_CODE  # 店家註冊邀請碼
+> npm run deploy
+> ```
+> 本機開發：`npm run db:init && npm run seed:make && npm run db:seed`，然後 `npm run dev:api`（API，port 8787）+ `npm run dev`（前端，/api 會 proxy 過去）。
+
 沒有這一步，每個人看到的都是自己瀏覽器裡的示範世界；A 開的攤 B 看不到。
 
 **3.1 建立 Worker 專案（AI 做）**

@@ -47,12 +47,14 @@ const doneCount = computed(() => holding.value?.tasks.filter((x) => x.done).leng
 /** 4.1：曾參與過的事件 → 共同參與的對象們（只有代號） */
 const coParticipants = computed(() => (holding.value?.completedByMe ? world.strangers.filter((s) => s.history.includes(holding.value!.title)) : []))
 
-function join() {
+async function join() {
   if (!gathering.value) return
-  const r = joinGathering(gathering.value.id)
+  const r = await joinGathering(gathering.value.id)
   if (r === 'full') toast(t('event.full'), 'lilac')
   else if (r === 'too-many') toast(t('event.tooMany', { n: activeReservationCount(), max: MAX_ACTIVE_RESERVATIONS }), 'lilac')
   else if (r === 'gone') toast(t('event.gone'), 'lilac')
+  else if (r === 'network') toast(t('online.network'), 'fire')
+  else if (r) toast(t('online.failed', { code: r }), 'fire')
 }
 </script>
 
@@ -134,7 +136,7 @@ function join() {
         <div class="actions" v-if="gathering.status !== 'dissolved'">
           <el-button v-if="!amIn" type="primary" round @click="join">{{ t('event.join') }}</el-button>
           <el-button v-if="isHost && gathering.status === 'formed' && !gathering.completedByHost" round class="fire-btn" @click="completeGathering(gathering.id)">{{ t('event.hostComplete') }}</el-button>
-          <el-button v-if="gathering.status === 'pending'" size="small" text @click="simulateJoin(gathering.id)">{{ t('event.simulateJoin') }}</el-button>
+          <el-button v-if="gathering.status === 'pending' && !world.online" size="small" text @click="simulateJoin(gathering.id)">{{ t('event.simulateJoin') }}</el-button>
         </div>
 
         <div class="section-title">{{ t('event.passphrase') }}</div>

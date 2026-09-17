@@ -105,7 +105,7 @@ function parse() {
   step.value = 1
 }
 
-function submit() {
+async function submit() {
   formError.value = ''
   if (!form.passphrase.trim()) return (formError.value = t('create.errPass'))
   if (!form.unlimited && form.builtIn > form.cap) return (formError.value = t('create.errBuiltIn'))
@@ -124,9 +124,18 @@ function submit() {
     passphrase: form.passphrase.trim().slice(0, PASSPHRASE_MAX),
     hostPays: form.hostPays,
   }
-  const r = createGathering(input)
+  const r = await createGathering(input)
   if ('error' in r) {
-    formError.value = r.error === 'too-many' ? t('event.tooMany', { n: activeReservationCount(), max: MAX_ACTIVE_RESERVATIONS }) : t('create.errOutside')
+    formError.value =
+      r.error === 'too-many'
+        ? t('event.tooMany', { n: activeReservationCount(), max: MAX_ACTIVE_RESERVATIONS })
+        : r.error === 'out-of-world'
+          ? t('create.errOutside')
+          : r.error === 'time-passed'
+            ? t('create.timePassed')
+            : r.error === 'network'
+              ? t('online.network')
+              : t('online.failed', { code: r.error })
     return
   }
   created.value = r
