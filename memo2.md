@@ -438,7 +438,7 @@ light(n) = clamp( 220 × 1.05 ^ (n − 1) , 220 , 375 )     n = 已加入人數�
 - 店家：Email + 密碼（PBKDF2）登入，註冊需邀請碼（`MERCHANT_INVITE_CODE`）。後台 API 只回聚合數字；圈內自發聚集只有時間、狀態、人數。
 - 密語與主辦承諾值不出現在公開的 `/api/world` 回應；密語只在 `me.gatherings`（本人加入的）裡。
 - 已在本機 D1 跑過完整流程：兩個承諾值開攤／加入 → 成立並認到霧室火把 → 需虛擬預約的物資解鎖 → 探知互見／關掉即消失 → 主辦完成 → 店家登入、熄火把後世界同步。
-- **尚未部署**（需你同意）。部署前要做：`npm run db:init:remote`、`npm run db:seed:remote`、`wrangler secret put MERCHANT_INVITE_CODE`。
+- 2026-09-18 已部署（使用者同意）：遠端 D1 建表＋灌示範世界、邀請碼 secret 設定完成，https://pinky.stream 現在是共享世界。示範店家 demo@pinky.stream；邀請碼與密碼另外交給使用者，不寫進文件。
 
 
 ### 2026-09-18 · 上線 pinky.stream、手機修正、GPS、桌機版面
