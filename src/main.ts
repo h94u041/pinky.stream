@@ -19,7 +19,21 @@ const router = createRouter({
   ],
 })
 
+function showFatal(msg: string) {
+  let box = document.getElementById('fatal')
+  if (!box) {
+    box = document.createElement('pre')
+    box.id = 'fatal'
+    box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;background:#191527;color:#ff9a3c;border:1px solid #302843;border-radius:10px;padding:10px 12px;font:12px ui-monospace,monospace;white-space:pre-wrap;max-height:40vh;overflow:auto'
+    document.body.appendChild(box)
+  }
+  box.textContent += (box.textContent ? '\n' : '') + msg
+}
+window.addEventListener('error', (e) => showFatal(`Error: ${e.message} (${e.filename?.split('/').pop()}:${e.lineno})`))
+window.addEventListener('unhandledrejection', (e) => showFatal(`Unhandled: ${(e.reason && (e.reason.stack || e.reason.message)) || e.reason}`))
+
 const app = createApp(App)
+app.config.errorHandler = (err) => showFatal(`Vue: ${(err as Error)?.stack || err}`)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }

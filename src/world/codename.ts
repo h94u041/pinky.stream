@@ -32,14 +32,28 @@ export function randomPassphrase(rng: () => number = Math.random): string {
 
 /** 4.10：只上傳 commit = H(sk‖salt)。原型用 SubtleCrypto 做 SHA-256。 */
 export async function commitOf(sk: string, salt: string): Promise<string> {
-  const data = new TextEncoder().encode(`${sk}‖${salt}`)
-  const buf = await crypto.subtle.digest('SHA-256', data)
-  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('')
+  const text = `${sk}‖${salt}`
+  if (typeof globalThis.crypto?.subtle?.digest === 'function') {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))
+    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('')
+  }
+  // 非安全來源（http）沒有 SubtleCrypto：用 FNV-1a 疊四輪湊 64 hex，只為了讓原型能開
+  let out = ''
+  for (let round = 0; round < 4; round++) {
+    let h = 0x811c9dc5 ^ round
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i)
+      h = Math.imul(h, 0x01000193) >>> 0
+    }
+    out += h.toString(16).padStart(8, '0') + (Math.imul(h, 0x9e3779b1) >>> 0).toString(16).padStart(8, '0')
+  }
+  return out.slice(0, 64)
 }
 
 export function randomHex(bytes: number): string {
   const a = new Uint8Array(bytes)
-  crypto.getRandomValues(a)
+  if (typeof globalThis.crypto?.getRandomValues === 'function') crypto.getRandomValues(a)
+  else for (let i = 0; i < bytes; i++) a[i] = Math.floor(Math.random() * 256)
   return [...a].map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 

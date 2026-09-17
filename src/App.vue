@@ -61,8 +61,8 @@ function switchLang() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 16px;
+  gap: 8px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--line);
   background: var(--ink);
   flex-wrap: wrap;
@@ -85,6 +85,8 @@ function switchLang() {
 .tabs {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 .tabs button {
   background: transparent;
@@ -111,6 +113,25 @@ function switchLang() {
 }
 .tabs .about:hover {
   color: var(--paper);
+}
+@media (max-width: 600px) {
+  .topbar {
+    padding: 6px 10px;
+  }
+  .brand h1 {
+    font-size: 16px;
+  }
+  .tabs {
+    gap: 2px;
+  }
+  .tabs button,
+  .tabs .about {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  .tabs .lang {
+    font-size: 11px;
+  }
 }
 .stage {
   flex: 1;

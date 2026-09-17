@@ -428,6 +428,14 @@ light(n) = clamp( 220 × 1.05 ^ (n − 1) , 220 , 375 )     n = 已加入人數�
 
 -----------------------------------------以下開發記事區---------------------------------------
 
+### 2026-09-18 · 上線 pinky.stream、手機修正、GPS、桌機版面
+
+- 已上線：https://pinky.stream（Cloudflare Workers 靜態資產，wrangler 直接上傳，之後 npm run deploy）。
+- 手機打不開的原因：http:// 進站時沒有轉 https，非安全來源沒有 crypto.subtle，金鑰生成拋錯、App 起不來。修法：index.html 開頭強制轉 https；commitOf / randomHex 在沒有 SubtleCrypto 時退回純 JS；加上全域錯誤浮層讓手機上的錯誤看得到。仍建議在 Cloudflare 開 Always Use HTTPS。
+- 真實定位：底部「定位」鈕，navigator.geolocation.watchPosition，開著時玩家位置由 GPS 決定、點地圖走路停用；範圍外會提示並維持模擬模式。位置不上傳。尚未做 hysteresis（memo2 9.10）。
+- 版面：拿掉手機框，地圖全螢幕；底部導覽改浮動膠囊；≥ 900px 時事件 sheet 與探知面板靠右側欄。
+
+
 ### 2026-09-17 · 上線規劃
 
 - 託管決定：Cloudflare Pages（前端）+ Workers（API、MCP、公開內容頁）+ D1。詳細步驟在 [docs/deploy.md](docs/deploy.md)。

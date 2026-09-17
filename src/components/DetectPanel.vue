@@ -69,12 +69,21 @@ function greet(s: Stranger) {
   position: absolute;
   left: 8px;
   right: 8px;
-  bottom: 64px;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   background: rgba(25, 21, 39, 0.92);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 10px 12px;
   z-index: 15;
+}
+@media (min-width: 900px) {
+  .detect {
+    left: auto;
+    right: 16px;
+    top: 16px;
+    bottom: auto;
+    width: 400px;
+  }
 }
 .detect.on {
   border-color: rgba(201, 190, 240, 0.5);

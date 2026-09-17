@@ -185,7 +185,7 @@ function join() {
   position: absolute;
   left: 8px;
   right: 8px;
-  bottom: 64px;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   max-height: 62%;
   overflow: auto;
   background: var(--panel);
@@ -278,6 +278,16 @@ h2 {
 .fire-btn {
   border-color: var(--fire);
   color: var(--fire);
+}
+@media (min-width: 900px) {
+  .sheet {
+    left: auto;
+    right: 16px;
+    top: 16px;
+    bottom: auto;
+    width: 400px;
+    max-height: calc(100% - 100px);
+  }
 }
 .sheet-enter-from,
 .sheet-leave-to {

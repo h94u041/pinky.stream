@@ -7,6 +7,18 @@ export default {
     lang: 'EN',
     about: '關於',
   },
+  gps: {
+    label: '定位',
+    on: '定位：開',
+    asking: '定位中…',
+    outside: '定位：範圍外',
+    denied: '瀏覽器拒絕了定位。到瀏覽器設定允許 pinky.stream 取得位置後再試一次。',
+    unsupported: '這個瀏覽器不支援定位。',
+    outsideMsg: '你的位置在地圖範圍外（目前只涵蓋台中市中心）。地圖維持模擬模式。',
+    error: '定位失敗：{msg}',
+    simHint: '定位開著時不能點地圖走路；關掉定位就能模擬。',
+    accuracy: '±{m} m',
+  },
   nav: {
     detect: '探知',
     create: '發起一攤',

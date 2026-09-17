@@ -41,6 +41,8 @@ export interface WorldState {
   dissolvedPending: string[]
   /** 剛成立的攤（提示用） */
   formedPending: string[]
+  /** 真實定位開著：點地圖走路停用 */
+  gpsOn: boolean
 }
 
 const MEMORY_KEY = 'pinky.memories.v1'
@@ -70,6 +72,7 @@ export const world = reactive<WorldState>({
   toasts: [],
   dissolvedPending: [],
   formedPending: [],
+  gpsOn: false,
 })
 
 const tr = (key: string, params?: Record<string, unknown>) => i18n.global.t(key, params ?? {})
@@ -640,6 +643,14 @@ export function stepWalk(dtMs: number) {
 
 export function isWalking() {
   return walk.active
+}
+
+/** 真實定位回報的位置：直接放人、取消模擬走路、寫進記憶 */
+export function setPlayerPosition(x: number, y: number) {
+  walk.active = false
+  world.player.x = x
+  world.player.y = y
+  memorize(x, y, playerRadius())
 }
 
 /* ---------- 初始化 ---------- */

@@ -14,6 +14,7 @@ import {
   stepWalk,
   supplyLocked,
   tick,
+  toast,
   walkTo,
   world,
 } from '../world/store'
@@ -75,6 +76,10 @@ function onUp(e: PointerEvent) {
     return
   }
   emit('select', null)
+  if (world.gpsOn) {
+    toast(t('gps.simHint'), 'info')
+    return
+  }
   walkTo(w.x, w.y)
 }
 function onWheel(e: WheelEvent) {
@@ -189,8 +194,8 @@ onBeforeUnmount(() => {
 }
 .ctrls {
   position: absolute;
-  right: 10px;
-  top: 10px;
+  left: 10px;
+  top: 44px;
   display: flex;
   flex-direction: column;
   gap: 4px;

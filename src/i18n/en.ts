@@ -9,6 +9,18 @@ const en: typeof zhTW = {
     lang: '中文',
     about: 'About',
   },
+  gps: {
+    label: 'GPS',
+    on: 'GPS: on',
+    asking: 'Locating…',
+    outside: 'GPS: outside',
+    denied: 'Location was denied. Allow pinky.stream to use your location in the browser settings and try again.',
+    unsupported: 'This browser has no geolocation.',
+    outsideMsg: 'You are outside the map (central Taichung only for now). Staying in simulation mode.',
+    error: 'Location failed: {msg}',
+    simHint: 'While GPS is on you cannot tap to walk; turn GPS off to simulate.',
+    accuracy: '±{m} m',
+  },
   nav: {
     detect: 'Detect',
     create: 'Host a spot',
