@@ -25,6 +25,13 @@ Pinky 沒有推薦演算法、沒有個人檔案、沒有滑卡。把「認識�
 - [給店家](https://pinky.stream/merchants/)：點火把、開團、投放物資、後台看得到什麼
 - [打開地圖](https://pinky.stream/)：互動原型（參與者端）；[店家後台](https://pinky.stream/#/console)
 
+## 即時資料（店家端，公開）
+
+- [店家火把列表](https://pinky.stream/torches/)、每支火把有自己的頁 /torch/<id>（LocalBusiness JSON-LD）
+- [店家活動列表](https://pinky.stream/events/)、每場活動有自己的頁 /event/<id>（Event JSON-LD）
+- MCP 端點：https://pinky.stream/mcp（Streamable HTTP，無需認證，只讀）。工具：list_torches、list_holdings、list_supplies、search、fetch。
+- 動態 sitemap：https://pinky.stream/sitemap.xml
+
 ## 完整版
 
 - [llms-full.txt](https://pinky.stream/llms-full.txt)：所有公開頁的純文字全文

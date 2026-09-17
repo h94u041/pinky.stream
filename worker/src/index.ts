@@ -7,6 +7,8 @@ import { crowdOf, effectiveTarget } from '../../src/world/torch'
 import { hashPassword, randomToken, SESSION_TTL_MS, verifyPassword } from './auth'
 import type { Ctx } from './env'
 import { runMaintenance } from './maintenance'
+import { handleMcp } from './mcp'
+import { eventPage, eventsPage, sitemap, torchesPage, torchPage } from './pages'
 import { gatheringRow, holdingRow, supplyRow, torchRow, type GatheringRow, type HoldingRow, type SupplyRow, type TorchRow } from './rows'
 
 const app = new Hono<Ctx>()
@@ -403,6 +405,16 @@ app.get('/api/merchant/dashboard', async (c) => {
 })
 
 app.get('/api/health', (c) => c.json({ ok: true, now: now() }))
+
+/* ---------- 對外：MCP 與公開頁（只有店家端資料） ---------- */
+app.all('/mcp', handleMcp)
+app.get('/torches/', torchesPage)
+app.get('/torches', (c) => c.redirect('/torches/', 301))
+app.get('/torch/:id', torchPage)
+app.get('/events/', eventsPage)
+app.get('/events', (c) => c.redirect('/events/', 301))
+app.get('/event/:id', eventPage)
+app.get('/sitemap.xml', sitemap)
 app.all('/api/*', (c) => c.json({ error: 'not-found' }, 404))
 
 // 非 /api 的請求：靜態資產（run_worker_first 只涵蓋 /api/*，這裡是保險）

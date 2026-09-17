@@ -13,7 +13,7 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
     // /api/* 一律進 Worker，其餘先找靜態檔
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": ["/api/*", "/mcp", "/torch/*", "/torches", "/torches/", "/event/*", "/events", "/events/", "/sitemap.xml"]
   },
   "d1_databases": [
     { "binding": "DB", "database_name": "pinky", "database_id": "72f5b429-0301-4092-b353-1deffefdae47" }

@@ -114,6 +114,8 @@ Workers 免費 10 萬請求／天、D1 免費 5 GB + 每日 500 萬讀取。超�
 
 ## 階段 4 · MCP server（AI 做，約半天）
 
+> **2026-09-18 更新：已完成**（`/mcp`，同一個 Worker，不用 Agents SDK / Durable Objects：改用 @hono/mcp 無狀態模式）。工具與隱私界線如下表。
+
 讓 Claude／ChatGPT 能直接「查 Pinky」。跑在同一個 Worker 上，不另外花錢。
 
 **4.1 實作（AI 做）**
@@ -141,6 +143,8 @@ Workers 免費 10 萬請求／天、D1 免費 5 GB + 每日 500 萬讀取。超�
 ---
 
 ## 階段 5 · GEO：讓 AI 搜尋引擎找到並引用（AI 做 + 你提交）
+
+> **2026-09-18 更新：5.1–5.3 已完成**（靜態說明頁 + 動態 `/torch/*`、`/event/*`、列表頁、動態 sitemap、robots、llms.txt）。剩 5.4 提交索引（你做）與 5.6 持續內容。
 
 現在的 App 對爬蟲來說是一片黑的 canvas。分數來自**可爬的公開內容頁**。
 

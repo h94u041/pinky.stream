@@ -428,6 +428,15 @@ light(n) = clamp( 220 × 1.05 ^ (n − 1) , 220 , 375 )     n = 已加入人數�
 
 -----------------------------------------以下開發記事區---------------------------------------
 
+### 2026-09-18 · 階段 4 + 5：MCP 與動態公開頁（尚未部署）
+
+- **MCP**：`/mcp`（Streamable HTTP、無狀態、無需認證、只讀）。工具 `list_torches`、`list_holdings(day)`、`list_supplies(torch_id)`、`search(query)`、`fetch(id)`（後兩個是 ChatGPT connector 的硬性要求）。實作 `worker/src/mcp.ts`，用 @hono/mcp + MCP SDK 1.30。
+- **動態公開頁**（Worker 直接輸出 HTML，`worker/src/pages.ts`）：`/torches/`、`/torch/:id`（LocalBusiness JSON-LD）、`/events/`、`/event/:id`（Event JSON-LD：startDate、location geo、organizer、offers 免費、名額）、`/sitemap.xml` 改成動態（含所有火把與未結束活動）。靜態頁的導覽加了「店家」「活動」。
+- 對外資料只走 `worker/src/public.ts`：火把（非暫時）、Holding Group、物資。自發聚集、presence、承諾值不在裡面——這是程式層的隱私界線，MCP 與頁面共用。
+- 本機驗證：initialize / tools/list / search / fetch / list_holdings 都通；頁面 200、404、301 正確；sitemap 17 個 URL。
+- 待你做（部署後）：Bing Webmaster 與 Google Search Console 提交 sitemap；claude.ai → Connectors → Add custom connector 貼 `https://pinky.stream/mcp`；Cloudflare AI Crawl Control 確認放行。
+
+
 ### 2026-09-18 · 階段 3：後端（Workers + D1），世界變成共享的
 
 - 同一個 Worker 現在同時提供靜態資產與 `/api/*`（Hono + D1）。schema 在 `worker/schema.sql`，示範資料由 `worker/scripts/make-seed.mjs` 產生（seed.sql 含店家密碼雜湊，不進 repo）。
